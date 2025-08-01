@@ -1,13 +1,14 @@
-// Number-to-letter mapping (expand as needed)
 const mapping = {
-  "00": " ", "01": "a", "02": "b", "03": "c", "04": "d", "05": "e",
-  "06": "f", "07": "g", "08": "h", "09": "i", "10": "j",
-  "11": "k", "12": "l", "13": "m", "14": "n", "15": "o",
-  "16": "p", "17": "q", "18": "r", "19": "s", "20": "t",
-  "21": "u", "22": "v", "23": "w", "24": "x", "25": "y",
-  "26": "z", "50": "L", "25": "S"  // Example for custom necklace codes
+  "00": " ",
+  "11": "A", "12": "B", "13": "C", "14": "D", "15": "E",
+  "16": "F", "17": "G", "18": "H", "19": "I",
+  "21": "J", "22": "K", "23": "L", "24": "M", "25": "N",
+  "26": "O", "27": "P", "28": "Q", "29": "R",
+  "31": "S", "32": "T", "33": "U", "34": "V", "35": "W",
+  "36": "X", "37": "Y", "38": "Z"
 };
 
+// Function to process numbers and map result
 function processNumbers() {
   let mainNum = document.getElementById("numberInput").value.trim();
   let divider = parseFloat(document.getElementById("dividerInput").value);
@@ -17,26 +18,23 @@ function processNumbers() {
     return;
   }
 
-  // Perform division with decimals
+  // Perform division with 2 decimal precision
   let divisionResult = parseFloat(mainNum) / divider;
 
-  // Convert result to a string with 2 decimal places (adjust precision as needed)
-  let resultString = divisionResult.toFixed(2); // e.g., 50.25
+  // Scale to avoid decimal point issues
+  let scaled = Math.round(divisionResult * 100);
 
-  // Remove decimal point but keep its digits
-  resultString = resultString.replace(".", ""); // → "5025"
+  // Convert to string with padding to at least 4 digits
+  let resultString = scaled.toString().padStart(4, "0");
 
-  // Pad if result has odd length
-  if (resultString.length % 2 !== 0) {
-    resultString = "0" + resultString;
-  }
+  // Split into 2-digit chunks
+  let chunks = resultString.match(/.{1,2}/g);
 
-  // Split into chunks and map
+  // Map chunks to letters
   let finalMessage = "";
-  for (let i = 0; i < resultString.length; i += 2) {
-    let chunk = resultString.substring(i, i+2);
+  chunks.forEach(chunk => {
     finalMessage += mapping[chunk] !== undefined ? mapping[chunk] : "?";
-  }
+  });
 
   document.getElementById("result").textContent = finalMessage;
 }
